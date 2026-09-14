@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: nansen-time-machine
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.7
