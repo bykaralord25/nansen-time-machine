@@ -1,175 +1,130 @@
 # Nansen Time Machine ⏪
 
-**Could you have spotted the move before it happened?**
+**Could you spot the move before it happened?**
 
-Nansen Time Machine is a point-in-time onchain trading simulator built for the **Nansen Meridian Buildathon**. It drops a player into a historical market snapshot, hides the future, exposes only temporally-correct Nansen data, asks for a **BUY / PASS / SHORT** decision, and then reveals what happened next.
+Nansen Time Machine is a point-in-time onchain trading simulator built for the **Nansen Meridian Buildathon**. It drops a player into a historical market snapshot, hides the future, exposes only historical Nansen intelligence available for that snapshot, asks for a **BUY / PASS / SHORT** decision, and then reveals what happened next.
 
-> The product is deliberately different from another alert dashboard: it turns Nansen historical intelligence into an interactive test of decision quality.
+**Live demo:** https://nansen-time-machine.onrender.com
+
+> Not another alert dashboard. Time Machine turns historical onchain intelligence into an interactive test of decision quality.
+
+## What is live
+
+- **1,000 meaningful Nansen API calls completed**
+- **250 historical snapshots**
+- **25 Ethereum assets**
+- **0 look-ahead bias by design**
+- BUY / PASS / SHORT decisions
+- +1d / +7d / +30d historical outcomes
+- Decision Score
+- Session-based **Trader DNA**
+- Public Render deployment
+- Visible **Powered by Nansen API** attribution
 
 ## Demo flow
 
-1. Pick a historical token/date.
-2. See only data available at that point in time.
-3. Inspect Smart Money, whale, exchange and Top PnL flows.
+1. Pick a token and historical date.
+2. Enter the snapshot with the future hidden.
+3. Inspect Smart Trader, whale, exchange and Top PnL flows.
 4. Lock BUY / PASS / SHORT.
-5. Reveal +24h / +7d / +30d.
-6. Receive a decision score.
-7. Later: build a persistent **Trader DNA** profile.
+5. Reveal the historical outcome.
+6. Receive a Decision Score.
+7. Build your Trader DNA across multiple decisions.
 
-## Why the data is point-in-time
+## Dataset
 
-The project uses Nansen historical/backtesting endpoints specifically to avoid look-ahead bias. Historical flow cohorts resolve labels at the query end date, and historical buyer/seller labels are also resolved at that historical date rather than using today's labels.
+The production dataset was built from exactly **1,000 meaningful Nansen API calls**:
 
-## Repo status
+**25 tokens × 10 historical dates × 4 calls = 1,000 calls**
 
-**v0.2 — repo-ready prototype**
+For each of the 250 token/date snapshots:
 
-- [x] playable web UI
-- [x] server-side API key handling
-- [x] Nansen client
-- [x] verified wrappers for historical Smart Money holdings, historical flow summary, historical who-bought/sold and OHLCV
-- [x] request ledger with Nansen request IDs / credit headers
-- [x] resumable cache
-- [x] dry-run 1,000-call build manifest
-- [x] safety guard against placeholder token addresses
-- [ ] final verified 25-token universe
-- [ ] execute 1,000+ meaningful calls
-- [ ] convert raw responses into production scenarios
-- [ ] Trader DNA
-- [ ] leaderboard + share card
-- [ ] deploy public demo
+- 1 × Historical Token Flow Summary
+- 3 × OHLCV requests for historical context and future reveal windows
 
-## Quick start
+The build consumed the calls to create the actual playable dataset rather than generating throwaway traffic. The resulting app uses cached, derived scenarios at runtime, so visitors do not consume the project's Nansen API credits.
 
-```bash
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
+## Point-in-time design
 
-pip install -r requirements.txt
-python run.py
-```
+The simulator is designed to avoid look-ahead bias. The player sees the historical intelligence first, commits to a decision, and only then receives the future price outcome. Historical flow data is queried for the relevant historical window rather than using future outcome data to construct the decision screen.
 
-Open http://127.0.0.1:5050
+A useful example is **AAVE · 2025-10-15 · +7 days**: the snapshot shows a **Strong Accumulation (100/100)** composite signal, yet AAVE subsequently moved **-10.61%**. Time Machine therefore does not treat onchain intelligence as an oracle; it tests how a trader interprets the information available at the time.
 
-## Nansen API key
+## Data signals
 
-Never commit your key.
+Each production snapshot derives a composite signal from:
 
-```bash
-copy .env.example .env
-```
+- Smart Trader net flow — 35%
+- Whale net flow — 25%
+- Top PnL net flow — 25%
+- Exchange net flow — 15% (direction inverted for the composite)
 
-Edit `.env` locally:
-
-```env
-NANSEN_API_KEY=your_key_here
-```
-
-`.env` is gitignored.
-
-## The 1,000-call dataset plan
-
-The buildathon asks builders to make 1,000 API calls. We use them for the actual product dataset rather than making meaningless requests.
-
-Default plan:
-
-**25 tokens × 10 historical dates × 4 meaningful data calls = 1,000 Nansen API calls**
-
-Per token/date:
-
-1. Smart Money historical holdings
-2. Historical token flow summary
-3. Historical who bought/sold
-4. OHLCV covering the pre-snapshot context and reveal window
-
-First validate the token list:
-
-```bash
-python scripts/validate_tokens.py
-```
-
-Then generate the manifest:
-
-```bash
-python scripts/build_call_plan.py
-```
-
-Preview without sending anything:
-
-```bash
-python scripts/run_dataset.py
-```
-
-Only after checking the token universe and credits:
-
-```bash
-python scripts/run_dataset.py --execute
-```
-
-Every response is cached. If the process stops, rerunning it skips completed tasks instead of wasting calls.
-
-Check the audit trail:
-
-```bash
-python scripts/call_stats.py
-```
-
-## Security / credit safety
-
-- Nansen API key is server-side only.
-- `.env` is excluded from Git.
-- Dataset execution is **dry-run by default**.
-- Placeholder token addresses deliberately block production execution until verified.
-- 429 responses respect `Retry-After`.
-- API response metadata records request IDs and actual credit usage.
-- Cached tasks are not repeated.
-
-## Nansen endpoints used
-
-- `POST /api/v1/smart-money/historical-holdings`
-- `POST /api/v1beta1/tgm/historical-token-flow-summary`
-- `POST /api/v1beta1/tgm/historical-who-bought-sold`
-- `POST /api/v1/tgm/token-ohlcv`
-
-The first three provide historical/temporally-correct intelligence; OHLCV supplies the market context and post-decision reveal.
+The UI exposes the underlying flow values alongside the composite signal so the player can make their own decision.
 
 ## Architecture
 
 ```text
-Browser
-  │
-  ▼
-Flask app
-  │
-  ├── scenario cache ──► playable Time Machine
-  │
-  └── NansenClient
+Nansen API
+   │
+   ├── Historical Token Flow Summary
+   └── Token OHLCV
           │
-          ├── historical Smart Money holdings
-          ├── historical flow summary
-          ├── historical who bought/sold
-          └── OHLCV
-                │
-                ▼
-          raw response cache
-                │
-                ▼
-          scenario builder (next)
+          ▼
+   local resumable cache
+          │
+          ▼
+   scenario builder
+          │
+          ▼
+250 derived historical scenarios
+          │
+          ▼
+Flask + Gunicorn → Render → Browser
+                         │
+                         ├── BUY / PASS / SHORT
+                         ├── future reveal
+                         ├── Decision Score
+                         └── Trader DNA
 ```
 
-## 30–60 second demo script
+Raw Nansen API responses, request ledgers and API credentials are **not redistributed in this public repository**. The repository contains the derived scenario dataset required to run the public demo.
+
+## Run locally
+
+```bash
+python -m venv .venv
+pip install -r requirements.txt
+python run.py
+```
+
+Open `http://127.0.0.1:5050`.
+
+No Nansen API key is required to play the cached production scenarios. An API key is only needed for dataset-generation tooling.
+
+## Deployment
+
+Production is served with Gunicorn on Render:
+
+```bash
+gunicorn run:app
+```
+
+Live: https://nansen-time-machine.onrender.com
+
+## 30–60 second demo
 
 **0–5s** — “Could you spot the move before it happened?”  
-**5–15s** — Enter a historical snapshot; future is hidden.  
-**15–28s** — Show Smart Money / whales / exchange / Top PnL signals.  
-**28–35s** — Lock BUY.  
-**35–45s** — Reveal +7 days.  
-**45–55s** — Show market return + Decision Score.  
-**55–60s** — “Built from 1,000+ Nansen API calls. No look-ahead bias.”
+**5–15s** — Select **AAVE · 2025-10-15**, +7 days, and enter the historical snapshot.  
+**15–28s** — Show Smart Trader / whale / exchange / Top PnL flows and **Strong Accumulation 100/100**.  
+**28–35s** — Lock **BUY**.  
+**35–45s** — Reveal the future: **AAVE -10.61%**.  
+**45–55s** — Show **Decision Score 33/100** and Trader DNA.  
+**55–60s** — “1,000 Nansen API calls. 250 historical snapshots. Zero look-ahead bias.”
+
+## Built with
+
+Python · Flask · Gunicorn · Nansen API · HTML/CSS/JavaScript · Render
 
 ## Disclaimer
 
-This is an educational buildathon project, not financial advice. Simulated historical performance does not imply future results.
+Educational buildathon project only. Not financial advice. Historical simulations do not imply future performance.
