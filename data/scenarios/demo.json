@@ -1,0 +1,4 @@
+[
+  {"id":"sol-2026-03-14","symbol":"SOL","name":"Solana","chain":"solana","date":"2026-03-14","entry_price":142.30,"future":{"1d":146.90,"7d":171.80,"30d":160.20},"smart_money_netflow":8450000,"smart_money_wallets":38,"whale_netflow":6200000,"exchange_netflow":-12400000,"top_pnl_netflow":5100000,"signal":"Strong Accumulation","signal_score":86,"answer_note":"Demo scenario. Production scenarios will be generated from cached Nansen point-in-time responses."},
+  {"id":"eth-2026-02-03","symbol":"ETH","name":"Ethereum","chain":"ethereum","date":"2026-02-03","entry_price":3184.0,"future":{"1d":3140.0,"7d":2976.0,"30d":3388.0},"smart_money_netflow":-12400000,"smart_money_wallets":24,"whale_netflow":-7600000,"exchange_netflow":18800000,"top_pnl_netflow":-4300000,"signal":"Distribution Risk","signal_score":31,"answer_note":"Demo scenario. Production scenarios will be generated from cached Nansen point-in-time responses."}
+]
