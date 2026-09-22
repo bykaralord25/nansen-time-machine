@@ -53,7 +53,7 @@ The API calls were used to build the actual dataset for the application. The pub
 
 Raw API responses, request logs and API credentials are not included in this public repository.
 
-## Point-in-time approach
+## Point in time approach
 
 Avoiding look-ahead bias is one of the main parts of the project.
 
