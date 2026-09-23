@@ -55,7 +55,7 @@ Raw API responses, request logs and API credentials are not included in this pub
 
 ## Point in time approach
 
-Avoiding look-ahead bias is one of the main parts of the project.
+Avoiding look ahead bias is one of the main parts of the project.
 
 The decision screen is built from historical data for the selected snapshot. Future price data is kept separate and is only shown after the player commits to BUY, PASS or SHORT.
 
@@ -65,7 +65,7 @@ The project is not trying to present an onchain signal as a guaranteed predictio
 
 One of the scenarios is **AAVE · 2025-10-15 · +7 days**.
 
-The snapshot produced a **Strong Accumulation (100/100)** composite signal. After the decision is revealed, the actual seven-day move is **-10.61%**.
+The snapshot produced a **Strong Accumulation (100/100)** composite signal. After the decision is revealed, the actual seven day move is **-10.61%**.
 
 That mismatch is useful. A strong historical flow signal can still lead to a bad trade, and the simulator lets the player see that directly instead of only showing examples where the signal worked.
 
@@ -92,7 +92,7 @@ The score is meant to make repeated rounds easier to compare. It is part of the 
 
 Trader DNA tracks the current session across multiple decisions.
 
-Instead of judging the player from a single round, it starts building a small profile from the decisions made during the session. This makes the app more useful as a repeatable historical exercise rather than a one-shot demo.
+Instead of judging the player from a single round, it starts building a small profile from the decisions made during the session. This makes the app more useful as a repeatable historical exercise rather than a one shot demo.
 
 ## Architecture
 
@@ -141,7 +141,7 @@ Open:
 http://127.0.0.1:5050
 ```
 
-No Nansen API key is required to play the cached production scenarios. A key is only needed for the dataset-generation tools.
+No Nansen API key is required to play the cached production scenarios. A key is only needed for the dataset generation tools.
 
 ## Deployment
 
