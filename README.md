@@ -6,7 +6,7 @@ Pick a token and a past date, look at the Nansen data that was available at that
 
 **Live demo:** https://nansen-time-machine.onrender.com
 
-The idea is simple: instead of looking at an alert after the move already happened, go back to the historical snapshot and make the decision with the information that was actually available then.
+Instead of checking an alert after the move has already happened, go back to that moment and make the decision based only on the information you had at the time.
 
 ## Current build
 
