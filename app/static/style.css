@@ -24,3 +24,11 @@ footer{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);color:#
 .choices button{position:relative;overflow:hidden}.choices button:after{content:"";position:absolute;inset:-2px;opacity:0;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.12),transparent 80%);transform:translateX(-100%);transition:transform .5s ease,opacity .2s}.choices button:hover:after{opacity:1;transform:translateX(100%)}
 @keyframes heroEnter{from{opacity:0;transform:translateY(24px);filter:blur(9px)}to{opacity:1;transform:none;filter:blur(0)}}
 @media(prefers-reduced-motion:reduce){.reveal-ui{opacity:1;transform:none;filter:none;transition:none}.hero>div:first-child,.hero .eyebrow,.hero h2{animation:none}.card{transform:none!important}}
+
+/* Fluid neon atmosphere */
+#fluid-light{position:absolute;inset:0;width:100%;height:100%;opacity:.95;filter:blur(18px) saturate(135%);mix-blend-mode:screen}
+.ambient:after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 115%,rgba(69,223,255,.06),transparent 48%),radial-gradient(ellipse at 84% 68%,rgba(255,79,200,.055),transparent 40%);animation:breathe 9s ease-in-out infinite alternate}
+.hero:after{content:"";position:absolute;width:44vw;height:1px;left:28%;top:70%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);box-shadow:0 0 30px rgba(255,79,200,.16);transform:rotate(-8deg);pointer-events:none}.hero{position:relative}
+.flow-panel,.decision,.signal,.dna,.result{overflow:hidden}.flow-panel:after,.decision:after,.signal:after,.dna:after,.result:after{content:"";position:absolute;inset:auto -20% -80% 25%;height:100%;background:radial-gradient(ellipse,rgba(143,92,255,.08),transparent 65%);pointer-events:none}
+@keyframes breathe{from{opacity:.55;transform:scale(1)}to{opacity:1;transform:scale(1.04)}}
+@media(prefers-reduced-motion:reduce){#fluid-light{display:none}.ambient:after{animation:none}}
