@@ -30,6 +30,9 @@ function fluidFrame(){fctx.clearRect(0,0,fw,fh);fctx.globalCompositeOperation='l
 document.querySelectorAll('.proof,.controls,.terminal,.signal,.decision,.result,.dna').forEach(el=>el.classList.add('reveal-ui'));
 const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');revealObserver.unobserve(entry.target)}}),{threshold:.1});
 document.querySelectorAll('.reveal-ui').forEach(el=>revealObserver.observe(el));
+const game=document.querySelector('#game');
+if(game){new MutationObserver(()=>{game.classList.remove('scene-pulse');void game.offsetWidth;game.classList.add('scene-pulse')}).observe(game,{subtree:true,childList:true,characterData:true})}
+document.querySelectorAll('.choices button').forEach(btn=>btn.addEventListener('click',()=>{document.body.classList.add('decision-made');setTimeout(()=>document.body.classList.remove('decision-made'),850)}));
 document.querySelectorAll('.card').forEach(card=>{
  card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;card.style.setProperty('--card-x',(x*100)+'%');card.style.setProperty('--card-y',(y*100)+'%');card.style.setProperty('--rx',((.5-y)*2.1)+'deg');card.style.setProperty('--ry',((x-.5)*2.1)+'deg')});
  card.addEventListener('pointerleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg')});
