@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nansen Time Machine</title><link rel="stylesheet" href="/static/style.css"></head>
 <body><div class="ambient" aria-hidden="true"><canvas id="fluid-light"></canvas><div class="cursor-aura"></div><div class="ambient-orb orb-a"></div><div class="ambient-orb orb-b"></div><div class="noise"></div></div><main class="shell">
 <header><div class="brand"><div class="brandmark">N</div><h1>Nansen <span>/ Time Machine</span></h1></div><div class="status"><i></i> POINT-IN-TIME DATA · LIVE BUILD</div></header>
-<section class="hero"><div><div class="eyebrow">HISTORICAL ONCHAIN INTELLIGENCE</div><h2>Trade the past.<br><em>Without seeing the future.</em></h2></div></section>
+<section class="hero"><div class="hero-copy"><div class="eyebrow">HISTORICAL ONCHAIN INTELLIGENCE</div><h2><span class="hero-line">Trade the</span><span class="hero-line hero-outline">past.</span><span class="hero-line hero-accent">Without seeing</span><span class="hero-line">the future.</span></h2><div class="hero-meta"><span>POINT IN TIME</span><span>NO LOOK AHEAD</span><span>NANSEN DATA</span></div></div><div class="hero-index" aria-hidden="true"><span>NTM</span><strong>01</strong></div></section>
 <section class="proof"><div><strong>1,000</strong><span>NANSEN API CALLS</span></div><div><strong>250</strong><span>HISTORICAL SNAPSHOTS</span></div><div><strong>25</strong><span>ASSETS TRACKED</span></div><div><strong>0</strong><span>LOOK-AHEAD BIAS</span></div></section>
 <section class="controls card"><select id="scenario" aria-label="Historical snapshot"></select><select id="horizon" aria-label="Reveal horizon"><option value="1d">Reveal · 24 hours</option><option value="7d" selected>Reveal · 7 days</option><option value="30d">Reveal · 30 days</option></select><button id="load">Open snapshot →</button></section>
 <section id="game" class="hidden"><div class="snapshot-head"><h2><span id="symbol">—</span><small id="date">—</small></h2><strong id="price">FUTURE LOCKED</strong></div>
@@ -35,6 +35,8 @@ document.querySelectorAll('.card').forEach(card=>{
  card.addEventListener('pointerleave',()=>{card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg')});
 });
 const root=document.documentElement;
+const hero=document.querySelector('.hero'),heroCopy=document.querySelector('.hero-copy');
+addEventListener('scroll',()=>{if(!hero||!heroCopy)return;const r=hero.getBoundingClientRect(),p=Math.max(0,Math.min(1,-r.top/Math.max(r.height,1)));root.style.setProperty('--hero-shift',(p*44)+'px');root.style.setProperty('--hero-fade',String(1-p*.58));root.style.setProperty('--hero-scale',String(1-p*.035))},{passive:true});
 let tx=50,ty=35,cx=50,cy=35;
 window.addEventListener('pointermove',e=>{tx=e.clientX/window.innerWidth*100;ty=e.clientY/window.innerHeight*100},{passive:true});
 (function aura(){cx+=(tx-cx)*.075;cy+=(ty-cy)*.075;root.style.setProperty('--mx',cx+'%');root.style.setProperty('--my',cy+'%');requestAnimationFrame(aura)})();
